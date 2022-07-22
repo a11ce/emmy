@@ -1,5 +1,8 @@
 #lang racket/gui
-(require mrlib/hierlist)
+(require mrlib/hierlist
+         racket/struct
+         struct-plus-plus
+         "struct-props-typed.rkt")
 
 (provide browse)
 
@@ -15,23 +18,17 @@
       (send t erase)
       (send t insert str))))
 
+;;; description/normalization
 
-; very temp
-(define-syntax-rule
-  (preds->string v (p s) ...)
+(define (desc*?listize obj)
   (cond
-    [(p v) s]
-    ...
-    [else "something else"]))
-
-(define (describe-obj obj)
-  (format "~v [~a]" obj
-          (preds->string
-           obj
-           (number? "Number")
-           (string? "String")
-           (struct? "Struct")
-           (list? "List"))))
+    [(number? obj) (values (format "~v : Number" obj) #f)]
+    [(string? obj) (values (format "~v : String" obj) #f)]
+    [(list? obj)   (values (format "~v : List" obj)  obj)]
+    [(struct? obj) (values (format "~v : ~a" obj (s-name obj)) (s-vals obj))]
+    [else (values "Other type" #f)]))
+    
+;;;
 
 (define sexp-list%
   (class hierarchical-list% (init [sexp #f])
@@ -44,14 +41,15 @@
         (send i set-text name)
         i))
     (define (init-sexp cur parent)
-      (if (list? cur)
-          ; XXX explode structs
-          (let ([cur-elem (new-named-list parent (describe-obj cur))])
+      (define-values (desc listized) (desc*?listize cur))
+      ;  (define desc (describe-obj cur))
+      (if listized
+          (let ([cur-elem (new-named-list parent desc)])
             (for-each (λ (child)
                         (init-sexp child cur-elem))
-                      cur)
+                      listized)
             cur-elem)
-          (new-named-item parent (describe-obj cur))))
+          (new-named-item parent desc)))
     (super-new)
     (define list-top (init-sexp sexp this))
     (define/public (expand-all [elem list-top])
@@ -75,7 +73,5 @@
   (new button% [parent buttons] [label "Collapse all"]
        [callback (lambda (b e)
                    (send list-top collapse-all))])
+  (send list-top expand-all)
   (send f show #t))
-  
-        
-;(browse '(1 2 (3 (4 "five")) 6))
