@@ -20,13 +20,40 @@
 
 ;;; description/normalization
 
-(define (desc*?listize obj)
+(struct named-field (name val))
+
+(define (struct->named-fields obj)
+  (for/list ([name (s-fields obj)]
+             [val (s-vals obj)])
+    (named-field name val)))
+; XXX
+
+(define (describe obj)
+  (if (named-field? obj)
+      (format "~v : [~a : ~a]"
+              (named-field-val obj)
+              (named-field-name obj)
+              (describe-type (named-field-val obj)))
+      (format "~v : ~a" obj (describe-type obj))))
+
+; this is not good enough
+(define (describe-type obj)
   (cond
-    [(number? obj) (values (format "~v : Number" obj) #f)]
-    [(string? obj) (values (format "~v : String" obj) #f)]
-    [(list? obj)   (values (format "~v : List" obj)  obj)]
-    [(struct? obj) (values (format "~v : ~a" obj (s-name obj)) (s-vals obj))]
-    [else (values "Other type" #f)]))
+    [(number? obj) "Number"]
+    [(string? obj) "String"]
+    [(list? obj)   "List"]
+    [(struct? obj) (s-name obj)]
+    [else "???"]))
+
+(define (listize obj)
+  (cond
+    [(list? obj)   obj]
+    [(struct? obj) (struct->named-fields obj)]
+    [(named-field? obj) (listize (named-field-val obj))]
+    [else #f]))
+
+(define (desc*?listize obj)
+  (values (describe obj) (listize obj)))
     
 ;;;
 
@@ -75,3 +102,7 @@
                    (send list-top collapse-all))])
   (send list-top expand-all)
   (send f show #t))
+
+(define-syntax-rule
+  (browse-code obj)
+  (browse (quote obj)))
