@@ -20,12 +20,14 @@
 
 ;;; description/normalization
 
-(struct named-field (name val))
+; type is the defined type, not the observed one
+(struct named-field (name type val))
 
 (define (struct->named-fields obj)
   (for/list ([name (s-fields obj)]
+             [type (s-types obj)]
              [val (s-vals obj)])
-    (named-field name val)))
+    (named-field name type val)))
 ; XXX
 
 (define (describe obj)
@@ -33,7 +35,7 @@
       (format "~v : [~a : ~a]"
               (named-field-val obj)
               (named-field-name obj)
-              (describe-type (named-field-val obj)))
+              (named-field-type obj))
       (format "~v : ~a" obj (describe-type obj))))
 
 ; this is not good enough
