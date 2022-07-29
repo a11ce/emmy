@@ -3,7 +3,7 @@
 (require/typed racket/struct
                [struct->list (Any -> (Listof Any))])
 
-(provide s-name s-fields s-vals struct*)
+(provide s-name s-fields s-types s-vals struct*)
 
 ; https://docs.racket-lang.org/ts-guide/types.html#%28part._.Types_for_.Structure_.Type_.Properties%29
 
@@ -14,6 +14,13 @@
                 (Listof Symbol)))
 (define-values (prop:s-fields s-fields? s-fields)
   (make-struct-type-property 'fields))
+
+(: prop:s-types (Struct-Property (Listof Symbol)))
+(: s-types? (-> Any Boolean : (Has-Struct-Property prop:s-types)))
+(: s-types (-> (Has-Struct-Property prop:s-types)
+              (Listof Symbol)))
+(define-values (prop:s-types s-types? s-types)
+  (make-struct-type-property 'types))
 
 (: prop:s-name (Struct-Property Symbol))
 (: s-name? (-> Any Boolean : (Has-Struct-Property prop:s-name)))
@@ -31,6 +38,7 @@
 (define-syntax-rule (struct* name [fields : types] ...)
   (struct name ([fields : types] ...) #:transparent
     #:property prop:s-fields '(fields ...)
+    #:property prop:s-types  '(types ...)
     #:property prop:s-name 'name
     #:property prop:custom-write
     (λ (s port mode)

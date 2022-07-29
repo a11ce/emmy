@@ -10,9 +10,10 @@
 (define test-v* (V* 1 2 3))
 (check-equal? (s-fields test-v*)
               '(a b c))
+(check-equal? (s-types test-v*)
+              '(Integer Integer Integer))
 (check-equal? (s-name test-v*)
               'V*)
-
 ;;;
 
 (struct* Point

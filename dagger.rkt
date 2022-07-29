@@ -2,7 +2,7 @@
 (require mrlib/hierlist
          racket/struct
          struct-plus-plus
-         "struct-props-typed.rkt")
+         "struct.rkt")
 
 (provide browse)
 
