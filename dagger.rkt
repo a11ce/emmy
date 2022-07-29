@@ -1,7 +1,7 @@
-#lang racket/gui
-(require mrlib/hierlist
-         racket/struct
-         struct-plus-plus
+#lang racket/base
+(require racket/gui/base
+         racket/class
+         mrlib/hierlist
          "struct.rkt")
 
 (provide browse)

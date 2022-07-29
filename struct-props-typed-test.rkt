@@ -1,6 +1,6 @@
-#lang typed/racket
+#lang typed/racket/base
 
-(require "struct-props-typed.rkt"
+(require "struct.rkt"
          typed/rackunit)
 
 (struct* V*

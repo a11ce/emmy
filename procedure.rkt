@@ -1,4 +1,4 @@
-#lang typed/racket
+#lang typed/racket/base
 
 (provide λ* defλ*)
 
@@ -16,11 +16,11 @@
     (define (display-typed-args)
       (display "(" port)
       (display (format "[~a : ~a]"
-                       (first (proc-arguments p))
-                       (first (proc-arg-types p)))
+                       (car (proc-arguments p))
+                       (car (proc-arg-types p)))
                port)
-      (for ([a (rest (proc-arguments p))]
-            [t (rest (proc-arg-types p))])
+      (for ([a (cdr (proc-arguments p))]
+            [t (cdr (proc-arg-types p))])
         (display (format " [~a : ~a]" a t) port))
       (display ") : " port)
       (display (proc-return-type p) port))
