@@ -1,0 +1,9 @@
+- [X] function display
+- [] tracing 
+    - [] error catch
+    - [] fancy thing
+- [] reexport bsl
+    - [] variadic args
+    - [] default args
+- [] warn on func def
+- [] #lang

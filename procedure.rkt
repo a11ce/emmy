@@ -1,13 +1,13 @@
 #lang typed/racket/base
 
-(provide λ* defλ*)
+(provide λ* defλ* proc*? proc*-typestring)
 
-(struct (T) proc ([name : (U False Symbol)]
-                  [arguments : (Listof Symbol)]
-                  [arg-types : (Listof Symbol)]
-                  [return-type : Symbol]
-                  [documentation : (U False String)]
-                  [implementation : T])
+(struct (T) proc* ([name : (U False Symbol)]
+                   [arguments : (Listof Symbol)]
+                   [arg-types : (Listof Symbol)]
+                   [return-type : Symbol]
+                   [documentation : (U False String)]
+                   [implementation : T])
   #:transparent
   #:property prop:procedure
   (struct-field-index implementation)
@@ -16,23 +16,38 @@
     (define (display-typed-args)
       (display "(" port)
       (display (format "[~a : ~a]"
-                       (car (proc-arguments p))
-                       (car (proc-arg-types p)))
+                       (car (proc*-arguments p))
+                       (car (proc*-arg-types p)))
                port)
-      (for ([a (cdr (proc-arguments p))]
-            [t (cdr (proc-arg-types p))])
+      (for ([a (cdr (proc*-arguments p))]
+            [t (cdr (proc*-arg-types p))])
         (display (format " [~a : ~a]" a t) port))
       (display ") : " port)
-      (display (proc-return-type p) port))
+      (display (proc*-return-type p) port))
     ;
     (case mode
-      [(0) (begin
-             (display (format "~a; ~a\n"
-                              (or (proc-name p) "Mysterious procedure")
-                              (or (proc-documentation p) "its workings are unknown"))
-                      port)
-             (display-typed-args))]
-      [else (display (format "procedure printed with mode ~v, ???" mode) port)])))
+      [(0) (display (format "{~a; ~a}"
+                            (or (proc*-name p) "Mysterious procedure")
+                            (or (proc*-documentation p) "its workings are unknown"))
+                    port)]
+      [else (display (format "procedure printed with mode ~v, ???" mode) port)]))
+  )
+
+(define (proc*-typestring p);[p : (All (T) (proc* T))])
+  ; avoids issues with polymorphism when used from untyped racket
+  ; only used internally so this should be fine
+  (if (proc*? p)
+      (apply string-append
+             (list (format "([~a : ~a]"
+                           (car (proc*-arguments p))
+                           (car (proc*-arg-types p)))
+                   (apply string-append
+                          (for/list ([a : Symbol (cdr (proc*-arguments p))]
+                                     [t : Symbol (cdr (proc*-arg-types p))])
+                            : (Listof String)
+                            (format " [~a : ~a]" a t)))
+                   (format ") : ~a" (proc*-return-type p))))
+      "meow"))
 
 (define-syntax λ*
   (syntax-rules (:)
@@ -50,9 +65,9 @@
     ; yay good
     [(λ* (name [arg : type] ...) : ret-type
          string body)
-     (proc 'name '(arg ...) '(type ...) 'ret-type
-           string
-           (λ ([arg : type] ...) body))]))
+     (proc* 'name '(arg ...) '(type ...) 'ret-type
+            string
+            (λ ([arg : type] ...) body))]))
 
 (define-syntax defλ*
   (syntax-rules (:)

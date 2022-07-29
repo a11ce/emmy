@@ -2,7 +2,8 @@
 (require racket/gui/base
          racket/class
          mrlib/hierlist
-         "struct.rkt")
+         "struct.rkt"
+         "procedure.rkt")
 
 (provide browse)
 
@@ -44,12 +45,14 @@
     [(number? obj) "Number"]
     [(string? obj) "String"]
     [(list? obj)   "List"]
+    [(proc*? obj)  (proc*-typestring obj)]
     [(struct? obj) (s-name obj)]
     [else "???"]))
 
 (define (listize obj)
   (cond
     [(list? obj)   obj]
+    [(proc*? obj) #f]
     [(struct? obj) (struct->named-fields obj)]
     [(named-field? obj) (listize (named-field-val obj))]
     [else #f]))
@@ -93,7 +96,7 @@
                (send elem close))))))
 
 (define (browse obj)
-  (define f (new frame% [label "dagger"] [width 400] [height 400]))
+  (define f (new frame% [label "dagger"] [width 800] [height 800]))
   (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
   (define list-top (new sexp-list% [parent f] [sexp obj]))
   (new button% [parent buttons] [label "Expand all"]
