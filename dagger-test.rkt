@@ -1,9 +1,4 @@
-#lang typed/racket/base
-
-(require "struct.rkt"
-         "procedure.rkt")
-(require/typed "dagger.rkt"
-               [browse (Any -> Void)])
+#lang emmy
 
 (define-type Item-Type (U 'wand 'flask 'spell))
 
@@ -36,3 +31,5 @@
 (defλ* (add [a : Number] [b : Number]) : Number
   "Adds two numbers"
   (+ a b))
+
+(browse add)

@@ -108,6 +108,3 @@
   (send list-top expand-all)
   (send f show #t))
 
-(define-syntax-rule
-  (browse-code obj)
-  (browse (quote obj)))

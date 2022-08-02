@@ -1,7 +1,6 @@
-#lang typed/racket/base
+#lang emmy
 
-(require "struct.rkt"
-         typed/rackunit)
+(require typed/rackunit)
 
 (struct* V*
          [a : Integer]
