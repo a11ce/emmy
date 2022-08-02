@@ -2,10 +2,12 @@
 
 (provide λ* defλ* proc*? proc*-typestring)
 
+; covers higher-order procs
+(define-type Type-Symbol (U Symbol (Sequenceof Type-Symbol)))
 (struct (T) proc* ([name : (U False Symbol)]
                    [arguments : (Listof Symbol)]
-                   [arg-types : (Listof Symbol)]
-                   [return-type : Symbol]
+                   [arg-types : (Listof Type-Symbol)]
+                   [return-type : Type-Symbol]
                    [documentation : (U False String)]
                    [implementation : T])
   #:transparent
@@ -42,8 +44,8 @@
                            (car (proc*-arguments p))
                            (car (proc*-arg-types p)))
                    (apply string-append
-                          (for/list ([a : Symbol (cdr (proc*-arguments p))]
-                                     [t : Symbol (cdr (proc*-arg-types p))])
+                          (for/list ([a : Type-Symbol (cdr (proc*-arguments p))]
+                                     [t : Type-Symbol (cdr (proc*-arg-types p))])
                             : (Listof String)
                             (format " [~a : ~a]" a t)))
                    (format ") : ~a" (proc*-return-type p))))
@@ -79,3 +81,4 @@
        (define name
          (λ* (name [arg : type] ...) : ret-type
              body ...)))]))
+

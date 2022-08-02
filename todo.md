@@ -1,9 +1,11 @@
 - [X] function display
+- [] typed dagger provide
 - [] tracing 
     - [] error catch
     - [] fancy thing
 - [] reexport bsl
     - [] variadic args
     - [] default args
+    - [] polymorphism
 - [] warn on func def
 - [] #lang
