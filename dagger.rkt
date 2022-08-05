@@ -3,9 +3,13 @@
          racket/class
          mrlib/hierlist
          "struct.rkt"
-         "procedure.rkt")
+         "procedure.rkt"
+         "stack-struct.rkt")
 
-(provide browse)
+(provide browse code-mode)
+
+(define code-mode (make-parameter #f))
+(define stack-mode (make-parameter #f))
 
 ; from https://docs.racket-lang.org/mrlib/Hierarchical_List_Control.html
 (define set-text-mixin
@@ -23,6 +27,8 @@
 
 ; type is the defined type, not the observed one
 (struct named-field (name type val))
+; ???? maybe fine
+(struct label (text))
 
 (define (struct->named-fields obj)
   (for/list ([name (s-fields obj)]
@@ -45,21 +51,55 @@
     [(number? obj) "Number"]
     [(string? obj) "String"]
     [(list? obj)   "List"]
+    [(symbol? obj) "Symbol"]
     [(proc*? obj)  (proc*-typestring obj)]
-    [(struct? obj) (s-name obj)]
+    [(s-name? obj) (s-name obj)]
     [else "???"]))
 
 (define (listize obj)
   (cond
     [(list? obj)   obj]
     [(proc*? obj) #f]
-    [(struct? obj) (struct->named-fields obj)]
+    [(s-name? obj) (struct->named-fields obj)]
     [(named-field? obj) (listize (named-field-val obj))]
     [else #f]))
 
+(define (describe-eval obj)
+  (format "~a -> ~a"
+          obj
+          (with-handlers ([exn:fail?
+                           (λ (e) "error!")])
+            (describe (eval obj)))))
+
 (define (desc*?listize obj)
-  (values (describe obj) (listize obj)))
-    
+  (cond
+    [(label? obj) (values (label-text obj) #f)]
+    [(code-mode)
+     (cond
+       [(list? obj)
+        (values (describe-eval obj)
+                (if (equal? (car obj) 'quote)
+                    #f obj))]
+       [else (values (describe (eval obj))
+                     (listize obj))])]
+    [(call-ctx? obj) (interpret-call-ctx obj)]
+    [else (values (describe obj) (listize obj))]))
+
+(define (ctx-call-rep ctx)
+  (format "(~a~a)"
+          (call-ctx-proc ctx)
+          (apply string-append
+                 (map (λ (arg) (format " ~a" arg))
+                      (call-ctx-args ctx)))))
+
+(define (interpret-call-ctx obj)
+  (values (format "Within ~a" (ctx-call-rep obj))
+          (append
+           (list (call-ctx-proc obj))
+           (call-ctx-args obj)
+           (list
+            (or (call-ctx-outer-call obj)
+                (label "{Top-level call}"))))))
 ;;;
 
 (define sexp-list%
@@ -84,6 +124,8 @@
           (new-named-item parent desc)))
     (super-new)
     (define list-top (init-sexp sexp this))
+    (define/public (rename-top new-name)
+      (send list-top set-text new-name))
     (define/public (expand-all [elem list-top])
       (when (is-a? elem hierarchical-list-compound-item<%>)
         (begin (send elem open)
@@ -95,16 +137,23 @@
                          (send elem get-items))
                (send elem close))))))
 
-(define (browse obj)
-  (define f (new frame% [label "dagger"] [width 800] [height 800]))
-  (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
-  (define list-top (new sexp-list% [parent f] [sexp obj]))
-  (new button% [parent buttons] [label "Expand all"]
-       [callback (lambda (b e)
-                   (send list-top expand-all))])
-  (new button% [parent buttons] [label "Collapse all"]
-       [callback (lambda (b e)
-                   (send list-top collapse-all))])
-  (send list-top expand-all)
-  (send f show #t))
-
+(define (browse obj [err #f])
+  (parameterize ([stack-mode err])
+    (define f (new frame% [label "dagger"] [width 800] [height 800]))
+    (send f show #t)
+    (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
+    (define list-top (new sexp-list% [parent f] [sexp obj]))
+    (when stack-mode
+      (send list-top rename-top
+            (format "~a~n~nWithin ~a"
+                    (stack-mode)
+                    (ctx-call-rep obj))))
+    (new button% [parent buttons] [label "Expand all"]
+         [callback (lambda (b e)
+                     (send list-top expand-all))])
+    (new button% [parent buttons] [label "Collapse all"]
+         [callback (lambda (b e)
+                     (send list-top collapse-all))])
+    (if (stack-mode)
+        (send (car (send list-top get-items)) open)
+        (send list-top expand-all))))

@@ -3,7 +3,7 @@
 (require/typed racket/struct
                [struct->list (Any -> (Listof Any))])
 
-(provide s-name s-fields s-types s-vals struct*)
+(provide s-name s-fields s-types s-vals struct* s-name?)
 
 ; https://docs.racket-lang.org/ts-guide/types.html#%28part._.Types_for_.Structure_.Type_.Properties%29
 

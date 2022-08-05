@@ -1,7 +1,8 @@
 - [X] function display
 - [X] typed dagger provide
 - [] tracing 
-- [] error catch
+- [X] error catch
+- [] procs always mark frames
 - [] fancy thing
 - [] reexport bsl
 - [] variadic args

@@ -28,10 +28,11 @@
       (display (proc*-return-type p) port))
     ;
     (case mode
-      [(0) (display (format "{~a; ~a}"
+      [(0 1) (display (format "{~a; ~a}"
                             (or (proc*-name p) "Mysterious procedure")
                             (or (proc*-documentation p) "its workings are unknown"))
                     port)]
+      [(#f) (display (or (proc*-name p) "mysterious procedure") port)]
       [else (display (format "procedure printed with mode ~v, ???" mode) port)]))
   )
 
