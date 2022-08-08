@@ -1,14 +1,15 @@
 - [X] function display
 - [X] typed dagger provide
-- [] tracing 
+- [] manual tracing
 - [X] error catch
 - [X] procs always mark frames
 - [] fancy thing
 - [] reexport for image assignment
 - [] variadic args
 - [] default args
-- [] polymorphism
+- [] polymorphism (cap letters)
 - [] warn on func def
 - [X] #lang
+- [] syntax-parse
 - [] restrict reexports
-- [] option to flatten calls
+- [X] option to flatten calls

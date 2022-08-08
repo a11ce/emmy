@@ -7,9 +7,6 @@
 
 (provide browse code-mode)
 
-(define code-mode (make-parameter #f))
-(define stack-mode (make-parameter #f))
-
 ; from https://docs.racket-lang.org/mrlib/Hierarchical_List_Control.html
 (define set-text-mixin
   (mixin (hierarchical-list-item<%>)
@@ -96,9 +93,10 @@
           (append
            (list (call-ctx-proc obj))
            (call-ctx-args obj)
-           (list
-            (or (call-ctx-outer-call obj)
-                (label "{Top-level call}"))))))
+           (if (flat-call-stack) '()
+               (list
+                (or (call-ctx-outer-call obj)
+                    (label "{Top-level call}")))))))
 ;;;
 
 (define sexp-list%
@@ -137,22 +135,22 @@
                (send elem close))))))
 
 (define (browse obj [err #f])
-  (parameterize ([stack-mode err])
-    (define f (new frame% [label "dagger"] [width 800] [height 800]))
-    (send f show #t)
-    (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
-    (define list-top (new sexp-list% [parent f] [sexp obj]))
-    (when stack-mode
-      (send list-top rename-top
-            (format "~a~n~nWithin ~a"
-                    (stack-mode)
-                    (ctx-call-rep obj))))
-    (new button% [parent buttons] [label "Expand all"]
-         [callback (lambda (b e)
-                     (send list-top expand-all))])
-    (new button% [parent buttons] [label "Collapse all"]
-         [callback (lambda (b e)
-                     (send list-top collapse-all))])
-    (if (stack-mode)
-        (send (car (send list-top get-items)) open)
-        (send list-top expand-all))))
+  (define f (new frame% [label "dagger"] [width 800] [height 800]))
+  (send f show #t)
+  (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
+  (define list-top (new sexp-list% [parent f] [sexp obj]))
+  (when err
+    (send list-top rename-top
+          (if (flat-call-stack)
+              (format "~a~n" err)
+              (format "~a~n~nWithin ~a"
+                      err (ctx-call-rep obj)))))
+  (new button% [parent buttons] [label "Expand all"]
+       [callback (lambda (b e)
+                   (send list-top expand-all))])
+  (new button% [parent buttons] [label "Collapse all"]
+       [callback (lambda (b e)
+                   (send list-top collapse-all))])
+  (if err
+      (send (car (send list-top get-items)) open)
+      (send list-top expand-all)))

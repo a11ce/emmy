@@ -5,8 +5,15 @@
 (provide (struct-out call-ctx)
          (struct-out proc*)
          proc*-typestring
-         Type-Symbol)
+         Type-Symbol
+         code-mode
+         flat-call-stack)
 
+
+(define code-mode (make-parameter #f))
+(define flat-call-stack (make-parameter #t))
+
+;;;
 
 ; covers higher-order procs
 (define-type Type-Symbol (U Symbol (Sequenceof Type-Symbol)))
