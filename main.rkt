@@ -2,7 +2,7 @@
 
 (require "struct.rkt"
          "procedure.rkt"
-         "stack.rkt")
+         "stack-tracing.rkt")
 
 (require/typed "dagger.rkt"
                [browse (->* (Any) (Any) Void)]
@@ -21,13 +21,3 @@
     (parameterize ([current-namespace (namespace-anchor->namespace a)])
       (browse (quote form)))))
 
-; XXX this is here only to avoid circular imports
-(let ([orig-handler (error-display-handler)])
-  (error-display-handler
-   (λ ([msg : String] [exn : Any])
-     (if (exn? exn)
-         (let ([stack (exn-stack exn)])
-           (build-stacked-ctx! stack)
-           (browse (car stack) msg))
-         (displayln "meow"))
-     (orig-handler msg exn))))

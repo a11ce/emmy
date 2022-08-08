@@ -3,8 +3,7 @@
          racket/class
          mrlib/hierlist
          "struct.rkt"
-         "procedure.rkt"
-         "stack-struct.rkt")
+         "common-types.rkt")
 
 (provide browse code-mode)
 
