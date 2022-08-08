@@ -2,6 +2,8 @@
 
 (provide λ* defλ* proc*? proc*-typestring)
 
+(require "stack.rkt")
+
 ; covers higher-order procs
 (define-type Type-Symbol (U Symbol (Sequenceof Type-Symbol)))
 (struct (T) proc* ([name : (U False Symbol)]
@@ -29,9 +31,9 @@
     ;
     (case mode
       [(0 1) (display (format "{~a; ~a}"
-                            (or (proc*-name p) "Mysterious procedure")
-                            (or (proc*-documentation p) "its workings are unknown"))
-                    port)]
+                              (or (proc*-name p) "Mysterious procedure")
+                              (or (proc*-documentation p) "its workings are unknown"))
+                      port)]
       [(#f) (display (or (proc*-name p) "mysterious procedure") port)]
       [else (display (format "procedure printed with mode ~v, ???" mode) port)]))
   )
@@ -70,7 +72,9 @@
          string body)
      (proc* 'name '(arg ...) '(type ...) 'ret-type
             string
-            (λ ([arg : type] ...) body))]))
+            (λ ([arg : type] ...)
+              (with-call-frame (call-ctx name (list arg ...) #f)
+                body)))]))
 
 (define-syntax defλ*
   (syntax-rules (:)

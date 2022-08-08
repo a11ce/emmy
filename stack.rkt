@@ -2,14 +2,10 @@
 
 (require racket/function
          racket/match
-         "procedure.rkt"
          "stack-struct.rkt")
 
-(require/typed "dagger.rkt"
-               [browse (->* (Any) (Any) Void)])
-
 (provide (struct-out call-ctx)
-         with-call-frame)
+         with-call-frame exn-stack build-stacked-ctx!)
 
 (define call-frame-key (make-continuation-mark-key 'call))
 
@@ -37,13 +33,3 @@
   (with-continuation-mark call-frame-key data
     (identity ; needed to create a new frame
      form)))
-
-(let ([orig-handler (error-display-handler)])
-  (error-display-handler
-   (λ ([msg : String] [exn : Any])
-     (if (exn? exn)
-         (let ([stack (exn-stack exn)])
-           (build-stacked-ctx! stack)
-           (browse (car stack) msg))
-         (displayln "meow"))
-     (orig-handler msg exn))))

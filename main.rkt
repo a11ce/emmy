@@ -5,7 +5,7 @@
          "stack.rkt")
 
 (require/typed "dagger.rkt"
-               [browse (Any -> Void)]
+               [browse (->* (Any) (Any) Void)]
                [code-mode (Parameterof Boolean)])
 
 (provide
@@ -20,3 +20,14 @@
   (parameterize ([code-mode #t])
     (parameterize ([current-namespace (namespace-anchor->namespace a)])
       (browse (quote form)))))
+
+; XXX this is here only to avoid circular imports
+(let ([orig-handler (error-display-handler)])
+  (error-display-handler
+   (λ ([msg : String] [exn : Any])
+     (if (exn? exn)
+         (let ([stack (exn-stack exn)])
+           (build-stacked-ctx! stack)
+           (browse (car stack) msg))
+         (displayln "meow"))
+     (orig-handler msg exn))))

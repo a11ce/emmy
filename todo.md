@@ -2,12 +2,13 @@
 - [X] typed dagger provide
 - [] tracing 
 - [X] error catch
-- [] procs always mark frames
+- [X] procs always mark frames
 - [] fancy thing
-- [] reexport bsl
+- [] reexport for image assignment
 - [] variadic args
 - [] default args
 - [] polymorphism
 - [] warn on func def
 - [X] #lang
 - [] restrict reexports
+- [] option to flatten calls
