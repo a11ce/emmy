@@ -8,7 +8,8 @@
                [browse (->* (Any) (Any) Void)])
 
 (provide (struct-out call-ctx)
-         with-call-frame exn-stack build-stacked-ctx!)
+         with-call-frame exn-stack build-stacked-ctx!
+         current-stack)
 
 (define call-frame-key (make-continuation-mark-key 'call))
 

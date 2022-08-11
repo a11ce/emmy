@@ -14,10 +14,21 @@
 (defλ* (car* [l : (Listof Number)]) : Number
   "Selects the first item of a non-empty list"
   (car l))
-            
+#|
 (defλ* (badNumMap [p : (-> Number Number)] [l : (Listof Number)]) : (Listof Number)
   "Constructs a new list by applying a function to each item in an existing list"
   (cons (p (car* l))
         (badNumMap p (cdr l))))
 
-(badNumMap add3 '(1 2 3 4 5))
+(badNumMap add3 '(1 2 3 4 5))|#
+
+(defλ* (numMap [p : (-> Number Number)] [l : (Listof Number)]) : (Listof Number)
+  "Constructs a new list by applying a function to each item in an existing list"
+  (begin
+    (browse-stack-here)
+    (if (null? l)
+        '()
+        (cons* (p (car* l))
+               (numMap p (cdr l))))))
+
+(numMap add3 '(1 2 3 4 5))

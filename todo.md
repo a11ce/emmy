@@ -1,6 +1,6 @@
 - [X] function display
 - [X] typed dagger provide
-- [] manual tracing
+- [X] manual tracing
 - [X] error catch
 - [X] procs always mark frames
 - [] fancy thing
@@ -11,5 +11,8 @@
 - [] warn on func def
 - [X] #lang
 - [] syntax-parse
-- [] restrict reexports
+- [] restrict reexports (internals in reader, check soegaard/super)
 - [X] option to flatten calls
+- [] error on incorrect return type
+- [] optionally mutable structs
+- [] vars within stack browser (how does drracket do it?)

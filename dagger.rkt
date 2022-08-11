@@ -134,7 +134,7 @@
                          (send elem get-items))
                (send elem close))))))
 
-(define (browse obj [err #f])
+(define (browse obj [err #f] [blocking #f])
   (define f (new frame% [label "dagger"] [width 800] [height 800]))
   (send f show #t)
   (define buttons (new horizontal-panel% [parent f] [stretchable-height #f]))
@@ -153,4 +153,12 @@
                    (send list-top collapse-all))])
   (if err
       (send (car (send list-top get-items)) open)
-      (send list-top expand-all)))
+      (send list-top expand-all))
+  (when blocking
+    (define blocker (make-channel))
+    (new button% [parent buttons] [label "Continue program"]
+         [callback (lambda (b e)
+                     (channel-put blocker 'meow))])
+    (yield (thread (λ ()
+                     (sync blocker)
+                     (send f show #f))))))
