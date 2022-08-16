@@ -1,8 +1,12 @@
 #lang typed/racket/base
 
+(require (for-syntax
+          racket/base))
+
 (require "struct.rkt"
          "procedure.rkt"
-         "stack-tracing.rkt")
+         "stack-tracing.rkt"
+         "enum.rkt")
 
 (require/typed "dagger.rkt"
                [browse (->* (Any) (Any Boolean) Any)]
@@ -11,6 +15,7 @@
 (provide
  browse x code-mode browse-code
  with-call-frame call-ctx browse-stack-here ; temp
+ defT*
  (all-from-out typed/racket/base
                "struct.rkt"
                "procedure.rkt"))

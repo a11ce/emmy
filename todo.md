@@ -10,9 +10,12 @@
 - [] polymorphism (cap letters)
 - [] warn on func def
 - [X] #lang
-- [] syntax-parse
+- [] syntax-parse proc
+- [] syntax-parse struct
 - [] restrict reexports (internals in reader, check soegaard/super)
 - [X] option to flatten calls
 - [] error on incorrect return type
 - [] optionally mutable structs
 - [] vars within stack browser (how does drracket do it?)
+- [X] enum/symbol-kind types
+- [] unify define-type/define

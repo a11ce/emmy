@@ -1,6 +1,6 @@
 #lang emmy
 
-(define-type Item-Type (U 'wand 'flask 'spell))
+(defT* Item-Type (NamedOptions Wand Flask Spell))
 
 (struct* Item
          [type : Item-Type]
@@ -15,9 +15,9 @@
 
 (define ex
   (Pickup 12 5 3
-          (Item 'wand "Purple Wand")))
+          (Item Wand "Purple Wand")))
 
-;(browse ex)
+(browse ex)
 
 (defλ* (incE [x : Integer]) : Integer
   "Increments an integer"
@@ -31,5 +31,3 @@
 (defλ* (add [a : Number] [b : Number]) : Number
   "Adds two numbers"
   (+ a b))
-
-(browse add)
