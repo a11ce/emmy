@@ -111,7 +111,6 @@
         i))
     (define (init-sexp cur parent)
       (define-values (desc listized) (desc*?listize cur))
-      ;  (define desc (describe-obj cur))
       (if listized
           (let ([cur-elem (new-named-list parent desc)])
             (for-each (λ (child)

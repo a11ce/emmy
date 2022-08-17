@@ -17,7 +17,7 @@
     #:description "named option"
     (pattern (~var opt id)
       #:fail-unless (is-cap-id? #'opt)
-      "named options must begin with an uppercase letter"))
+      "named options must be capitalized"))
   (syntax-parse stx
     [(_ name:id opts:enum-option ...+)
      #'(begin

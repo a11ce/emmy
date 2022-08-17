@@ -3,19 +3,23 @@
 - [X] manual tracing
 - [X] error catch
 - [X] procs always mark frames
-- [] fancy thing
-- [] reexport for image assignment
+- [X] #lang
+- [X] option to flatten calls
+- [X] enum/symbol-kind types
+- [X] syntax-parse struct
+- [X] optionally mutable structs
+
+- [] syntax-parse proc
 - [] variadic args
 - [] default args
 - [] polymorphism (cap letters)
-- [] warn on func def
-- [X] #lang
-- [] syntax-parse proc
-- [] syntax-parse struct
-- [] restrict reexports (internals in reader, check soegaard/super)
-- [X] option to flatten calls
-- [] error on incorrect return type
-- [] optionally mutable structs
-- [] vars within stack browser (how does drracket do it?)
-- [X] enum/symbol-kind types
+- [] better error on incorrect return type
+
 - [] unify define-type/define
+- [] warn on func def
+
+- [] reexport for image assignment
+- [] restrict reexports (internals in reader, check soegaard/super)
+
+- [] vars within stack browser (how does drracket do it?)
+- [] fancy interactive eval

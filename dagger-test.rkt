@@ -2,11 +2,11 @@
 
 (defT* Item-Type (NamedOptions Wand Flask Spell))
 
-(struct* Item
+(%struct Item
          [type : Item-Type]
          [name : String])
 
-(struct* Pickup
+(%struct Pickup
          [x : Integer]
          [y : Integer]
          [mana : Number]

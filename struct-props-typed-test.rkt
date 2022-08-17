@@ -2,7 +2,7 @@
 
 (require typed/rackunit)
 
-(struct* V*
+(%struct V*
          [a : Integer]
          [b : Integer]
          [c : Integer])
@@ -15,7 +15,7 @@
               'V*)
 ;;;
 
-(struct* Point
+(%struct Point
          [x : Number]
          [y : Number])
 
