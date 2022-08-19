@@ -1,16 +1,16 @@
 #lang emmy
 
-(defT* Item-Type (NamedOptions Wand Flask Spell))
+(define-type Item-Type (NamedOptions Wand Flask Spell))
 
-(%struct Item
-         [type : Item-Type]
-         [name : String])
+(define-type Item
+  (Struct [type : Item-Type]
+          [name : String]))
 
-(%struct Pickup
-         [x : Integer]
-         [y : Integer]
-         [mana : Number]
-         [object : Item])
+(define-type Pickup
+  (Struct [x : Integer]
+          [y : Integer]
+          [mana : Number]
+          [object : Item]))
 
 
 (define ex

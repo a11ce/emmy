@@ -3,10 +3,9 @@
 (require (for-syntax
           racket/base))
 
-(require "struct.rkt"
-         "procedure.rkt"
+(require "procedure.rkt"
          "stack-tracing.rkt"
-         "enum.rkt")
+         "define-type.rkt")
 
 (require/typed "dagger.rkt"
                [browse (->* (Any) (Any Boolean) Any)]
@@ -15,9 +14,8 @@
 (provide
  browse x code-mode browse-code
  with-call-frame call-ctx browse-stack-here ; temp
- defT*
+ define-type
  (all-from-out typed/racket/base
-               "struct.rkt"
                "procedure.rkt"))
 
 (define-syntax x (make-rename-transformer #'browse))

@@ -4,7 +4,7 @@
           racket/base
           syntax/parse))
 
-(provide defT*)
+(provide %named-options)
 
 (define-for-syntax (is-cap-id? stx)
   (define e (syntax-e stx))
@@ -25,10 +25,3 @@
          (define opts 'opts) ...
          (define-type name
            (U 'opts ...)))]))
-
-(define-syntax (defT* stx)
-  (syntax-parse stx
-    #:datum-literals (NamedOptions)
-    [(_ name:id (NamedOptions opts:id ...+))
-     #'(%named-options name opts ...)]))
-

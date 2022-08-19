@@ -15,7 +15,8 @@
 - [] polymorphism (cap letters)
 - [] better error on incorrect return type
 
-- [] unify define-type/define
+- [X] unify define-type
+- [] unify define
 - [] warn on func def
 
 - [] reexport for image assignment
