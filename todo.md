@@ -9,9 +9,8 @@
 - [X] syntax-parse struct
 - [X] optionally mutable structs
 
-- [] syntax-parse proc
-- [] variadic args
-- [] default args
+- [X] syntax-parse proc
+- [] variadic/default/optional args
 - [] polymorphism (cap letters)
 - [] better error on incorrect return type
 

@@ -68,7 +68,6 @@
       #:post (~do (validate-type #'t))))
   (define-syntax-class field-def
     #:description "[field-name : type]"
-    #:attributes (n t)
     (pattern (n:id (~datum :) t:type)))
 
   (define-splicing-syntax-class kwargs

@@ -19,15 +19,14 @@
 
 (browse ex)
 
-(defλ* (incE [x : Integer]) : Integer
-  "Increments an integer"
-  (add1 x))
+(define incE
+  (%λ ([x : Integer]) -> Integer
+    "Increments an integer"
+    (add1 x)))
 
-(define incE2
-  ; this should warn
-  (λ* ([x : Integer]) : Integer
-      (add1 x)))
-
-(defλ* (add [a : Number] [b : Number]) : Number
+(define add
+  (%λ ([a : Number] [b : Number]) -> Number
   "Adds two numbers"
-  (+ a b))
+  (+ a b)))
+
+(browse add)

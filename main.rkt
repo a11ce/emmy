@@ -15,8 +15,8 @@
  browse x code-mode browse-code
  with-call-frame call-ctx browse-stack-here ; temp
  define-type
- (all-from-out typed/racket/base
-               "procedure.rkt"))
+ %λ ; temp
+ (all-from-out typed/racket/base))
 
 (define-syntax x (make-rename-transformer #'browse))
 

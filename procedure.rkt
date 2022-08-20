@@ -1,40 +1,45 @@
 #lang typed/racket/base
 
-(provide λ* defλ* proc*? proc*-typestring)
+(provide %λ)
 
 (require "stack-tracing.rkt"
-         "common-types.rkt")
+         "common-types.rkt"
+         (for-syntax
+          racket/base
+          syntax/parse))
 
-(define-syntax λ*
-  (syntax-rules (:)
-    ; no name or string
-    [(λ* ([arg : type] ...) : ret-type
-         body)
-     (λ* (#f [arg : type] ...) : ret-type
-         #f
-         body)]
-    ; name/ no string
-    [(λ* (name [arg : type] ...) : ret-type
-         body)
-     (λ* (name [arg : type] ...) : ret-type
-         #f body)]
-    ; yay good
-    [(λ* (name [arg : type] ...) : ret-type
-         string body)
-     (proc* 'name '(arg ...) '(type ...) 'ret-type
-            string
-            (λ ([arg : type] ...)
-              (with-call-frame (call-ctx name (list arg ...) #f)
-                body)))]))
+(define-syntax (%λ stx)
+  (define-splicing-syntax-class proc-name
+    #:description "procedure name"
+    (pattern (~optional (~var n id)
+                        #:defaults ([n #'#f]))))
+  (define-splicing-syntax-class desc-string
+    #:description "procedure description"
+    (pattern (~optional (~var s string)
+                        #:defaults ([s #'#f]))))
 
-(define-syntax defλ*
-  (syntax-rules (:)
-    [(defλ* (name [arg : type] ...) : ret-type
-       ; body actually means body-and-maybe-doc
-       body ...)
-     (begin
-       (: name : (-> type ... ret-type))
-       (define name
-         (λ* (name [arg : type] ...) : ret-type
-             body ...)))]))
+  (define-syntax-class type
+    #:description "type"
+    (pattern (~var t id)))
+  (define-syntax-class proc-arg
+    #:description "procedure argument"
+    (pattern (n:id (~datum :) t:type)))
+  (define-splicing-syntax-class return-type
+    #:description "return type"
+    (pattern (~seq (~datum ->) t:type)))
+
+  (syntax-parse stx
+    #:datum-literals (->)
+    [(_ name:proc-name (args:proc-arg ...)
+        ret:return-type doc:desc-string
+        body:expr ...+)
+     #'(proc* 'name.n
+              '(args.n ...) '(args.t ...)
+              'ret.t
+              doc.s
+              (λ ([args.n : args.t] ...)
+                (with-call-frame (call-ctx
+                                  'name.n
+                                  (list args.n ...) '#f)
+                  body ...)))]))
 
