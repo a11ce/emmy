@@ -12,21 +12,18 @@
           [mana : Number]
           [object : Item]))
 
-
 (define ex
   (Pickup 12 5 3
           (Item Wand "Purple Wand")))
 
-(browse ex)
-
-(define incE
-  (%λ ([x : Integer]) -> Integer
+(define (incE [x : Integer]) -> Integer
     "Increments an integer"
-    (add1 x)))
+    (add1 x))
 
 (define add
-  (%λ ([a : Number] [b : Number]) -> Number
+  (λ ([a : Number] [b : Number]) -> Number
   "Adds two numbers"
   (+ a b)))
 
-(browse add)
+(define (ret3) -> Number
+  3)

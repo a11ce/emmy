@@ -20,7 +20,7 @@
 
   (define-syntax-class type
     #:description "type"
-    (pattern (~var t id)))
+    (pattern (~var t expr)))
   (define-syntax-class proc-arg
     #:description "procedure argument"
     (pattern (n:id (~datum :) t:type)))
@@ -39,7 +39,7 @@
               doc.s
               (λ ([args.n : args.t] ...)
                 (with-call-frame (call-ctx
-                                  'name.n
+                                  name.n
                                   (list args.n ...) '#f)
                   body ...)))]))
 

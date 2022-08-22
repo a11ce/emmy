@@ -50,6 +50,7 @@
     [(symbol? obj) "Symbol"]
     [(proc*? obj)  (proc*-typestring obj)]
     [(s-name? obj) (s-name obj)]
+    [(procedure? obj) "Built-in procedure (not yet augmented)"]
     [else "???"]))
 
 (define (listize obj)

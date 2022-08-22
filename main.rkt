@@ -3,7 +3,7 @@
 (require (for-syntax
           racket/base))
 
-(require "procedure.rkt"
+(require "define.rkt"
          "stack-tracing.rkt"
          "define-type.rkt")
 
@@ -15,8 +15,10 @@
  browse x code-mode browse-code
  with-call-frame call-ctx browse-stack-here ; temp
  define-type
- %λ ; temp
- (all-from-out typed/racket/base))
+ (rename-out [define* define]
+             [λ* λ])
+ (except-out (all-from-out typed/racket/base)
+             λ define))
 
 (define-syntax x (make-rename-transformer #'browse))
 

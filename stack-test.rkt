@@ -3,32 +3,31 @@
 ; this is all weird because no polymorphism yet
 ; + fake builtins
 
-(defλ* (add3 [x : Number]) : Number
+(define (add3 [x : Number]) -> Number
   "Adds 3"
   (+ 3 x))
 
-(defλ* (cons* [a : Number] [b : (Listof Number)]) : (Listof Number)
+(define (cons* [a : Number] [b : (Listof Number)]) -> (Listof Number)
   "Constructs a list"
   (cons a b))
 
-(defλ* (car* [l : (Listof Number)]) : Number
+(define (car* [l : (Listof Number)]) -> Number
   "Selects the first item of a non-empty list"
   (car l))
-#|
-(defλ* (badNumMap [p : (-> Number Number)] [l : (Listof Number)]) : (Listof Number)
+
+(define (badNumMap [p : (-> Number Number)] [l : (Listof Number)]) -> (Listof Number)
   "Constructs a new list by applying a function to each item in an existing list"
-  (cons (p (car* l))
+  (cons* (p (car* l))
         (badNumMap p (cdr l))))
 
-(badNumMap add3 '(1 2 3 4 5))|#
+;(badNumMap add3 '(1 2 3 4 5))
 
-(defλ* (numMap [p : (-> Number Number)] [l : (Listof Number)]) : (Listof Number)
+(define (numMap [p : (-> Number Number)] [l : (Listof Number)]) -> (Listof Number)
   "Constructs a new list by applying a function to each item in an existing list"
-  (begin
-    (browse-stack-here)
-    (if (null? l)
-        '()
-        (cons* (p (car* l))
-               (numMap p (cdr l))))))
+  (browse-stack-here)
+  (if (null? l)
+      '()
+      (cons* (p (car* l))
+             (numMap p (cdr l)))))
 
 (numMap add3 '(1 2 3 4 5))

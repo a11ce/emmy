@@ -15,8 +15,8 @@
 - [] better error on incorrect return type
 
 - [X] unify define-type
-- [] unify define
-- [] warn on func def
+- [X] unify define
+- [X] normalize func def
 
 - [] reexport for image assignment
 - [] restrict reexports (internals in reader, check soegaard/super)

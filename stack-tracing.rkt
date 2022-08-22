@@ -33,10 +33,10 @@
      (set-call-ctx-outer-call! cur next)
      (build-stacked-ctx! (cdr ctxs))]))
 
-(define-syntax-rule (with-call-frame data form)
+(define-syntax-rule (with-call-frame data form ...)
   (with-continuation-mark call-frame-key data
     (identity ; needed to create a new frame
-     form)))
+     (begin form ...))))
 
 (let ([orig-handler (error-display-handler)])
   (error-display-handler
