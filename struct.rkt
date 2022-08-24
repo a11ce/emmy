@@ -3,7 +3,8 @@
 (require "common-types.rkt"
          (for-syntax
           racket/base
-          syntax/parse))
+          syntax/parse
+          "common-syntax.rkt"))
 
 (require/typed racket/struct
                [struct->list (Any -> (Listof Any))])
@@ -40,36 +41,15 @@
 
 ;;;
 
-(define-for-syntax (is-cap-symbol? s)
-  (and (symbol? s)
-       (char-upper-case?
-        (string-ref (symbol->string s) 0))))
-
-(define-for-syntax (validate-type stx)
-  (define e (syntax->datum stx))
-  (define (check dat)
-    (unless (is-cap-symbol? dat)
-      (eprintf "~a is probably not a valid type, try capitalizing it~n~n"
-              dat)))
-  (if (list? e)
-      (for-each check e)
-      (check e)))
-
 (define-syntax (%struct stx)
   (define-syntax-class struct-name
     #:description "struct name"
-    (pattern (~var name id)
-      #:fail-unless (is-cap-symbol? (syntax-e #'name))
-      "struct type-names must be capitalized"))
-
-  (define-syntax-class type
-    #:description "struct field type"
-    (pattern (~var t expr)
-      #:post (~do (validate-type #'t))))
+    #:attributes (name)
+    (pattern :new-type))
   (define-syntax-class field-def
-    #:description "[field-name : type]"
-    (pattern (n:id (~datum :) t:type)))
-
+    #:description "struct field definition"
+    #:attributes (n t)
+    (pattern :typed-decl))
   (define-splicing-syntax-class kwargs
     #:description "optional struct keywords"
     (pattern (~optional (~var kwarg keyword))))

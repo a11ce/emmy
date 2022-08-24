@@ -6,7 +6,8 @@
          "common-types.rkt"
          (for-syntax
           racket/base
-          syntax/parse))
+          syntax/parse
+          "common-syntax.rkt"))
 
 (define-syntax (%λ stx)
   (define-splicing-syntax-class proc-name
@@ -17,29 +18,32 @@
     #:description "procedure description"
     (pattern (~optional (~var s string)
                         #:defaults ([s #'#f]))))
-
-  (define-syntax-class type
-    #:description "type"
-    (pattern (~var t expr)))
   (define-syntax-class proc-arg
     #:description "procedure argument"
-    (pattern (n:id (~datum :) t:type)))
-  (define-splicing-syntax-class return-type
-    #:description "return type"
-    (pattern (~seq (~datum ->) t:type)))
+    #:attributes (n t)
+    (pattern :typed-decl))
 
   (syntax-parse stx
     #:datum-literals (->)
-    [(_ name:proc-name (args:proc-arg ...)
+    [(_ name:proc-name explicit-tvars:maybe-tvars (args:proc-arg ...)
         ret:return-type doc:desc-string
         body:expr ...+)
-     #'(proc* 'name.n
-              '(args.n ...) '(args.t ...)
-              'ret.t
-              doc.s
-              (λ ([args.n : args.t] ...)
-                (with-call-frame (call-ctx
-                                  name.n
-                                  (list args.n ...) '#f)
-                  body ...)))]))
-
+     (with-syntax ([opt-tvars
+                    ; only look for auto tvars if not explicitly given
+                    (if (attribute explicit-tvars.v)
+                        #'(#:forall (explicit-tvars.v ...))
+                        (with-syntax
+                            ([auto-tvars (find-tvars #'(args.t ...))])
+                          (if (null? (syntax-e #'auto-tvars))
+                              '()
+                              #'(#:forall auto-tvars))))])
+       #'(proc* 'name.n
+                '(args.n ...) '(args.t ...)
+                'ret.t
+                doc.s
+                (λ (~@ . opt-tvars)
+                  ([args.n : args.t] ...)
+                  (with-call-frame (call-ctx
+                                    name.n
+                                    (list args.n ...) '#f)
+                    body ...))))]))

@@ -11,13 +11,14 @@
 
 - [X] syntax-parse proc
 - [] variadic/default/optional args
-- [] polymorphism (cap letters)
+- [X] polymorphism (cap letters)
 - [] better error on incorrect return type
 
 - [X] unify define-type
 - [X] unify define
 - [X] normalize func def
 
+- [] solidify tests
 - [] reexport for image assignment
 - [] restrict reexports (internals in reader, check soegaard/super)
 
