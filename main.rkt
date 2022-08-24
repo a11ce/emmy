@@ -30,4 +30,3 @@
 
 (define (browse-stack-here)
   (browse (current-stack) "User break" #t))
-
