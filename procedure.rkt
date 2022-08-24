@@ -12,8 +12,13 @@
 (define-syntax (%λ stx)
   (define-splicing-syntax-class proc-name
     #:description "procedure name"
-    (pattern (~optional (~var n id)
-                        #:defaults ([n #'#f]))))
+    #:attributes (n)
+    (pattern (~var n id))
+    (pattern (~var str string)
+      #:with n #'str)
+    (pattern (~seq)
+      #:with n #'"_"))
+
   (define-splicing-syntax-class desc-string
     #:description "procedure description"
     (pattern (~optional (~var s string)

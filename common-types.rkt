@@ -17,7 +17,7 @@
 
 ; covers higher-order procs
 (define-type Type-Symbol (U Symbol (Sequenceof Type-Symbol)))
-(struct (T) proc* ([name : (U False Symbol)]
+(struct (T) proc* ([name : (U False Symbol String)]
                    [arguments : (Listof Symbol)]
                    [arg-types : (Listof Type-Symbol)]
                    [return-type : Type-Symbol]

@@ -26,11 +26,11 @@
   (pattern (~optional (~seq #:forall (v:type ...)))))
 
 (define-syntax-class typed-decl
-  #:description "[name : type]"
+  #:description "[name : Type]"
   (pattern (n:id (~datum :) t:type)))
 
 (define-splicing-syntax-class return-type
-  #:description "return type"
+  #:description "-> Return-Type"
   ; the ~or* avoids silent lack of stack traces.
   ; could be changed to error instead
   (pattern (~seq (~or* (~datum ->) (~datum :)) t:type)))
@@ -50,8 +50,8 @@
 
 (define (is-cap-symbol? s)
   (and (symbol? s)
-       (char-upper-case?
-        (string-ref (symbol->string s) 0))))
+       (not (char-lower-case?
+             (string-ref (symbol->string s) 0)))))
 
 (define (should-be-tvar? s)
   (and (symbol? s)

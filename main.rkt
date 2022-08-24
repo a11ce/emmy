@@ -16,7 +16,8 @@
  with-call-frame call-ctx browse-stack-here ; temp
  define-type
  (rename-out [define* define]
-             [λ* λ])
+             [λ* λ]
+             [λ* lambda])
  (except-out (all-from-out typed/racket/base)
              λ define))
 

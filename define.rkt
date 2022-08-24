@@ -19,7 +19,7 @@
     (pattern :typed-decl))
   
   (syntax-parse stx
-    #:literals ((%λ λ))
+    #:literals ((%λ λ) (λ λ) (lambda λ))
     [(_ explicit-tvars:maybe-tvars (proc-name:id args:proc-arg ...)
         ret:return-type body ...)
      (with-syntax* ([tvars (if (attribute explicit-tvars.v)
@@ -40,5 +40,5 @@
                  body ...))))]
     [(_ proc-name:id (λ (args ...) body ...))
      #'(define* (proc-name args ...) body ...)]
-    [(_ else ...)
-     #'(define else ...)]))
+    [(_ name:id val:expr)
+     #'(define name val)]))
