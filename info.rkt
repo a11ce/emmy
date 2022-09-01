@@ -5,7 +5,8 @@
 (define scribblings '(("scribblings/emmy.scrbl")))
 
 (define compile-omit-paths '("etc"))
-(define test-omit-paths '("etc"))
+(define test-omit-paths '("etc"
+                          "scribblings"))
 
 (define deps '("base"
                "gui-lib"

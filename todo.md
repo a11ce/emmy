@@ -13,6 +13,7 @@
 - [] variadic/default/optional args
 - [X] polymorphism (cap letters)
 - [] better error on incorrect return type
+- [] optional type annotations
 
 - [X] unify define-type
 - [X] unify define
@@ -24,3 +25,6 @@
 
 - [] vars within stack browser (how does drracket do it?)
 - [] fancy interactive eval
+
+- [] break-at
+- [] fix proc-name override
