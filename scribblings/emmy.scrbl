@@ -9,16 +9,11 @@
 @(define-syntax-rule (rid dat)
    (racketid dat))
 
-@(define emmy-eval
-   (make-base-eval))
-@examples[#:eval emmy-eval
-          #:hidden
-          (require "../main.rkt")]
+@;@(define-syntax-rule (ex . args)
+@;   (examples #:eval emmy-eval #:label #f
+@;             . args))
 
-@(define-syntax-rule (ex . args)
-   (examples #:eval emmy-eval #:label #f
-             . args))
-@;(define-syntax-rule (ex . args) (racketblock . args))
+@(define-syntax-rule (ex . args) (racketblock . args))
 
 @title{Emmy}
 
@@ -26,10 +21,6 @@
 
 Emmy is a new student language for 111.
 Everything is subject to change, especially the documentation.
-
-The evaluated examples in this doc are a bit weird.
-Things don't print correctly, and there are redlinks where they shouldn't be.
-Run them in DrRacket instead.
 
 Report any problems with Emmy
 @(link "https://github.com/a11ce/emmy/issues/new/choose" "here").
