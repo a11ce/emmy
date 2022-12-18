@@ -46,6 +46,10 @@
     #:description "struct name"
     #:attributes (name)
     (pattern :new-type))
+  (define-splicing-syntax-class super
+    #:description "optional supertype name"
+    (pattern (~optional (~var name id))))
+
   (define-syntax-class field-def
     #:description "struct field definition"
     #:attributes (n t)
@@ -56,8 +60,8 @@
 
   (syntax-parse stx
     #:datum-literals (:)
-    [(_ name:struct-name opt-args:kwargs fields:field-def ...+)
-     #'(struct name ([fields.n : fields.t] ...)
+    [(_ name:struct-name opt-super:super opt-args:kwargs fields:field-def ...)
+     #'(struct name (~? (~@ . opt-super)) ([fields.n : fields.t] ...)
          (~? (~@ . opt-args))
          #:transparent
          #:property prop:s-fields '(fields.n ...)

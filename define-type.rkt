@@ -14,7 +14,7 @@
     #:datum-literals (NamedOptions Struct)
     [(_ name:id (NamedOptions args ...+))
      #'(%named-options name args ...)]
-    [(_ name:id (Struct args ...+))
+    [(_ name:id (Struct args ...))
      #'(%struct name args ...)]
     [(_ else ...)
      #'(define-type else ...)]))
