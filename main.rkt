@@ -5,7 +5,8 @@
 
 (require "define.rkt"
          "stack-tracing.rkt"
-         "define-type.rkt")
+         "define-type.rkt"
+         "conditionals.rkt")
 
 (require/typed "dagger.rkt"
                [browse (->* (Any) (Any Boolean) Any)]
@@ -17,9 +18,10 @@
  define-type
  (rename-out [define* define]
              [λ* λ]
-             [λ* lambda])
+             [λ* lambda]
+             [if* if])
  (except-out (all-from-out typed/racket/base)
-             λ define))
+             λ define if))
 
 (define-syntax x (make-rename-transformer #'browse))
 
